@@ -1,5 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { trigger,style,transition,animate,keyframes,query,stagger } from '@angular/animations';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-home',
@@ -34,22 +35,26 @@ export class HomeComponent implements OnInit {
 
   itemCount: number;
   btnText: string = 'Add Item to List';
-  taskText: string = 'My life goal';
-  tasks = ['Climb Mountain', 'Attend a interview', 'Learn React'];
-  constructor() { }
+  taskText: string = 'My life task';
+  tasks = [];
+  constructor(private _data: DataService) { }
 
   ngOnInit() {
+    this._data.task.subscribe(res => this.tasks = res);
+    this._data.changeTask(this.tasks);
     this.itemCount = this.tasks.length;
+    
   }
 
   addItem() {
     this.tasks.push(this.taskText);
-    this.taskText= '';
+    this.taskText = '';
     this.itemCount = this.tasks.length;
+    this._data.changeTask(this.tasks);
   }
 
-
-  removeItem(i){
+  removeItem(i) {
     this.tasks.splice(i, 1);
+    this._data.changeTask(this.tasks);
   }
 }
